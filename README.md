@@ -8,9 +8,9 @@ pip install -r requirements.txt
 python main.py {CONTENT IMAGE PATH} {STYLE IMAGE PATH}
 ```
 ### Examples
-<img src="images/mone.jpg" width="400" height="400"> <img src="images/mone-content.jpg" width="400" height="400"> <img src="images/mone-style.jpg" width="400" height="400"> <br>
+<img src="images/mone.jpg" width="200" height="200"> <img src="images/mone-content.jpg" width="200" height="200"> <img src="images/mone-style.jpg" width="200" height="200"> <br>
  
-<img src="images/scream.jpg" width="400" height="400"> <img src="images/me.jpg" width="400" height="400"> <img src="images/scream-me.jpg" width="400" height="400">
+<img src="images/scream.jpg" width="200" height="200"> <img src="images/me.jpg" width="200" height="200"> <img src="images/scream-me.jpg" width="200" height="200">
 
 ### Reference
 ```
