@@ -4,11 +4,9 @@ This is Pytorch implementation of the paper https://arxiv.org/abs/1904.12785
 ### How to use
 ```
 git clone 
-pip install -p requiments.txt
+pip install -r requirements.txt
 python main.py {CONTENT IMAGE PATH} {STYLE IMAGE PATH}
 ```
-### Examples
-![Mone style](images/mone.jpg) ![Mone style](images\mone-content.jpg) 
 ### Reference
 ```
   @misc{STROTSS,
