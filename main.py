@@ -3,14 +3,16 @@ import torch.nn.functional as F
 import argparse
 import sys
 import math
+import time
 
 from torch.optim import RMSprop
 from utils import load_image, LaplacianPyramid, GetRandomIndices, CreateSpatialTensor, save_tensor_to_image
 from model import VggEncoder
 from loss import StyleLoss
-
+from torch.utils.checkpoint import checkpoint
 
 if __name__ == '__main__':
+    start_time = time.time()
     if torch.cuda.is_available():
         device = torch.device('cuda')
     else:
@@ -61,6 +63,8 @@ if __name__ == '__main__':
                 indices = indices_generator(con_image.shape)
                 style_features = torch.cat((style_features, select_tensor(vgg_style_features, indices)), 2)
 
+        del vgg_style_features
+
         if j == 0:
             step_image = torch.add(con_image, st_image.mean(dim=(2, 3), keepdim=True))
             lr = 2e-3
@@ -82,10 +86,8 @@ if __name__ == '__main__':
             for i in range(200):
                 result_image = pyramid.reconstruct(content_pyramid)
                 optim.zero_grad()
-                out_features = vgg_encoder(result_image)
-                out_features = select_tensor(out_features, indices)
-                con_features = select_tensor(content_features, indices)
-                loss = criteria(out_features, con_features, style_features, alpha)
+                out_features = checkpoint(vgg_encoder, result_image)
+                loss = criteria(out_features, content_features, style_features, indices, alpha)
                 loss.backward()
                 optim.step()
                 indices = indices_generator(con_image.shape)
@@ -94,9 +96,9 @@ if __name__ == '__main__':
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
             break
-        del out_features, con_features, content_features, vgg_style_features
         alpha /= 2.0
     result = pyramid.reconstruct(content_pyramid)
     result.data.clamp_(0, 1)
     save_tensor_to_image(result, args.output, args.max_resolution)
-    print('Done!')
+    end_time = time.time() - start_time
+    print(f'Done! Work time {end_time:.2f}')

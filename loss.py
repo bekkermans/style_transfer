@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
 
-from utils import RGBtoYUV
+from utils import RGBtoYUV, CreateSpatialTensor
 
 
 class StyleLoss(nn.Module):
 
     def __init__(self):
         super(StyleLoss, self).__init__()
+        self.select_tensor = CreateSpatialTensor()
         self.rgb_to_yuv = RGBtoYUV()
 
     def cosine_distance(self, x, y):
@@ -52,8 +53,9 @@ class StyleLoss(nn.Module):
         y = self.cosine_distance(vgg_content_features, vgg_content_features)
         return torch.abs(x - y).mean()
 
-    def forward(self, extracted_features, content_feature, vgg_style_features, alpha):
-
+    def forward(self, extracted_features, content_feature, vgg_style_features, indices, alpha):
+        extracted_features = self.select_tensor(extracted_features, indices)
+        content_feature = self.select_tensor(content_feature, indices)
         # Content loss
         lc = self.content_loss(extracted_features, content_feature)
 
