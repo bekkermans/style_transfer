@@ -14,7 +14,7 @@ python main.py {CONTENT IMAGE PATH} {STYLE IMAGE PATH}
 
 ### Reference
 ```
-  @misc{STROTSS,
+  @Article{STROTSS,
     author = {Nicholas Kolkin, Jason Salavon, Greg Shakhnarovich},
     title = {Style Transfer by Relaxed Optimal Transport and Self-Similarity},
     year = {2019},
